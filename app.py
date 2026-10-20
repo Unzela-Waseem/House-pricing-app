@@ -164,8 +164,9 @@ def parse_property(form):
         raise ValueError("Area zero se zyada hona chahiye.")
     factors = {"Sq. Ft": 1, "Sq. Yard": 9, "Marla": 272.25, "Kanal": 5445}
     area_sqft = area * factors[unit]
-    if area_sqft < 100 or area_sqft > 100000:
-        raise ValueError("Converted area valid range (100–100,000 sq ft) ke andar dein.")
+    area_min, area_max = float(meta["area_min"]), float(meta["area_max"])
+    if area_sqft < area_min or area_sqft > area_max:
+        raise ValueError(f"Converted area model ke training range ({area_min:,.0f}–{area_max:,.0f} sq ft) ke andar dein.")
     if listed is not None and (not math.isfinite(listed) or listed <= 0):
         raise ValueError("Listed price zero se zyada hona chahiye.")
     row = pd.DataFrame([{
