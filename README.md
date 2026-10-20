@@ -23,7 +23,7 @@ A responsive Flask app that estimates Karachi home prices with the supplied, alr
 
 ## Model files and compatibility
 
-Keep `house_price_model.pkl` and `model_meta.json` in the project root. The model is loaded once when the app starts and is not retrained or altered. The pickle records scikit-learn 1.6.1; `requirements.txt` pins that version and XGBoost 2.1.4. If the model loader reports an XGBoost incompatibility, use the exact XGBoost version from the original training environment and update the pin accordingly.
+Keep `house_price_model.pkl` and `model_meta.json` in the project root. The model is loaded once when the app starts and is not retrained or altered. The pickle records scikit-learn 1.6.1; `requirements.txt` pins that version and the CPU-only XGBoost 2.1.4 package. The supplied model's output and saved locality price-per-square-foot figures indicate its log target is measured in crore PKR units, so inference restores PKR with `expm1(prediction) * 10_000_000`. The original training script was not supplied; verify this scale against that script if it becomes available. If the model loader reports an XGBoost incompatibility, use the exact XGBoost version from the original training environment and update the pin accordingly.
 
 ## First admin account
 

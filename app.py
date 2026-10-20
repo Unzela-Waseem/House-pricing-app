@@ -47,6 +47,9 @@ meta = json.loads((ROOT / "model_meta.json").read_text(encoding="utf-8"))
 LOCATIONS = meta["locations"]
 TYPES = meta["property_types"]
 LOC_STATS = meta["location_stats"]
+# The supplied model output indicates a crore-scale log target. Restore PKR
+# after expm1; cross-checked against the saved locality price-per-square-foot data.
+PRICE_SCALE_PKR = 10_000_000
 db = users = predictions = None
 client = None
 MONGO_URI = os.getenv("MONGODB_URI") or os.getenv("MONGO_URI")
@@ -176,7 +179,12 @@ def parse_property(form):
         "baths": baths,
         "area_sqft": area_sqft,
     }], columns=["location", "property_type", "bedrooms", "baths", "area_sqft"])
-    estimated = max(0.0, float(np.expm1(model.predict(row)[0])))
+    log_prediction = float(model.predict(row)[0])
+    if not math.isfinite(log_prediction):
+        raise ValueError("Model se valid estimate nahi nikla. Baad mein dobara try karein.")
+    estimated = float(np.expm1(log_prediction) * PRICE_SCALE_PKR)
+    if not math.isfinite(estimated) or estimated <= 0:
+        raise ValueError("Is property ke liye model valid positive estimate nahi de saka. Details check karke dobara try karein.")
     verdict = None
     if listed is not None:
         gap = (listed - estimated) / estimated * 100 if estimated else 0
