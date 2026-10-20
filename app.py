@@ -55,7 +55,7 @@ client = None
 MONGO_URI = os.getenv("MONGODB_URI") or os.getenv("MONGO_URI")
 if MONGO_URI:
     try:
-        client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+        client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=10000)
         db = client[os.getenv("MONGO_DB", "house_price_db")]
         users, predictions = db.users, db.predictions
         users.create_index([("email", ASCENDING)], unique=True)
