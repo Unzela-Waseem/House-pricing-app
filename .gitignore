@@ -1,0 +1,18 @@
+# Secrets and local environment files
+.env
+.env.*
+!.env.example
+atlas-credentials.env
+pasted file.png
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Local tooling
+.pytest_cache/
+.mypy_cache/
+.DS_Store
