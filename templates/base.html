@@ -10,7 +10,7 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light sticky-top site-nav"><div class="container">
-  <a class="navbar-brand" href="{{ url_for('index') }}"><span class="brand-mark">E</span><span>Everlight <small>HOMES</small></span></a>
+  <a class="navbar-brand" href="{{ url_for('index') }}" aria-label="Everlight Homes home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><path d="M7 23.5 24 9l17 14.5"/><path d="M12.5 21v18h23V21M20 39V27h8v12"/><path d="M16.5 28.5h.1M31.5 28.5h.1"/></svg></span><span class="brand-word">Everlight <small>HOMES</small></span></a>
   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav"><span class="navbar-toggler-icon"></span></button>
   <div class="collapse navbar-collapse" id="nav"><div class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
     {% if session.get('user_id') %}
@@ -25,7 +25,7 @@
 {% block content %}{% endblock %}</main>
 {% if request.endpoint == 'index' and not session.get('user_id') %}
 <footer class="site-footer site-footer-landing">
-  <div class="container footer-main"><div class="footer-brand"><a class="navbar-brand" href="{{ url_for('index') }}"><span class="brand-mark">E</span><span>Everlight <small>HOMES</small></span></a><p>Thoughtful property research for Karachi. Explore areas, estimate a value and compare your options.</p></div><div class="footer-links"><strong>Explore</strong><a href="#areas">Karachi areas</a><a href="#how-it-works">How it works</a><a href="#tools">Features</a></div><div class="footer-links"><strong>Your account</strong><a href="{{ url_for('login') }}">Log in</a><a href="{{ url_for('register') }}">Create account</a><a href="{{ url_for('register') }}">Start an estimate</a></div><div class="footer-note"><span class="eyebrow">A NOTE ON ESTIMATES</span><p>Predictions are for guidance only and are not official valuations. Confirm prices with current listings and local professionals.</p></div></div>
+  <div class="container footer-main"><div class="footer-brand"><a class="navbar-brand" href="{{ url_for('index') }}" aria-label="Everlight Homes home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><path d="M7 23.5 24 9l17 14.5"/><path d="M12.5 21v18h23V21M20 39V27h8v12"/><path d="M16.5 28.5h.1M31.5 28.5h.1"/></svg></span><span class="brand-word">Everlight <small>HOMES</small></span></a><p>Thoughtful property research for Karachi. Explore areas, estimate a value and compare your options.</p></div><div class="footer-links"><strong>Explore</strong><a href="#areas">Karachi areas</a><a href="#how-it-works">How it works</a><a href="#tools">Features</a></div><div class="footer-links"><strong>Your account</strong><a href="{{ url_for('login') }}">Log in</a><a href="{{ url_for('register') }}">Create account</a><a href="{{ url_for('register') }}">Start an estimate</a></div><div class="footer-note"><span class="eyebrow">A NOTE ON ESTIMATES</span><p>Predictions are for guidance only and are not official valuations. Confirm prices with current listings and local professionals.</p></div></div>
   <div class="container footer-bottom"><span>© {{ year }} Everlight Homes · Karachi House Price Predictor</span><span>Built for clearer property decisions</span></div>
 </footer>
 {% else %}
