@@ -16,7 +16,7 @@
     {% if session.get('user_id') %}
     <a class="nav-link" href="{{ url_for('predict') }}">Predict</a><a class="nav-link" href="{{ url_for('history') }}">History</a><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a><a class="nav-link" href="{{ url_for('compare') }}">Compare</a><a class="nav-link" href="{{ url_for('map_explorer') }}">Explore map</a><a class="nav-link" href="{{ url_for('profile') }}">Profile</a>
     {% if session.get('role') == 'admin' %}<a class="nav-link" href="{{ url_for('admin') }}">Admin</a>{% endif %}<a class="btn btn-dark btn-sm rounded-pill px-3" href="{{ url_for('logout') }}">Log out</a>
-    {% elif request.endpoint == 'index' %}<a class="nav-link" href="#how-it-works">How it works</a><a class="nav-link" href="#areas">Explore areas</a><a class="nav-link" href="#tools">Features</a><a class="nav-link" href="{{ url_for('login') }}">Log in</a><a class="btn btn-dark btn-sm rounded-pill px-3" href="{{ url_for('register') }}">Get started</a>
+    {% elif request.endpoint == 'index' %}<a class="nav-link" href="#home">Home</a><a class="nav-link" href="#areas">Areas</a><a class="nav-link" href="#how-it-works">How it works</a><a class="nav-link" href="#tools">Features</a><a class="nav-link" href="{{ url_for('login') }}">Log in</a><a class="btn btn-dark btn-sm rounded-pill px-3" href="{{ url_for('register') }}">Get estimate</a>
     {% else %}<a class="nav-link" href="{{ url_for('index') }}">Home</a><a class="nav-link" href="{{ url_for('login') }}">Log in</a><a class="btn btn-dark btn-sm rounded-pill px-3" href="{{ url_for('register') }}">Get started</a>{% endif %}
   </div></div>
 </div></nav>

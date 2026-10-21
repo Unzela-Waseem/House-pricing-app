@@ -2,36 +2,23 @@
 {% block title %}Find your Karachi home{% endblock %}
 
 {% block content %}
-<section class="landing-hero" id="home">
-  <div class="container landing-hero-grid">
-    <div class="landing-copy">
-      <span class="eyebrow">KARACHI HOMES · CLEARER DECISIONS</span>
-      <h1>Find a home<br>that feels like <em>yours.</em></h1>
-      <p>Explore Karachi neighbourhoods, estimate a property's value and compare your options—all in one place.</p>
-      <div class="landing-actions">
-        <a class="btn btn-dark rounded-pill px-4 py-3" href="{{ url_for('register') }}">Estimate a property <span aria-hidden="true">↗</span></a>
-        <a class="btn btn-outline-dark rounded-pill px-4 py-3" href="#how-it-works">See how it works</a>
-      </div>
-      <div class="landing-proof"><span aria-hidden="true">✦</span> Made for Karachi buyers, sellers and curious explorers</div>
+<section class="cover-hero" id="home">
+  <img class="cover-hero-image" src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2200&q=90" alt="Modern family home surrounded by landscaped greenery">
+  <div class="cover-hero-shade"></div>
+  <div class="container cover-hero-inner">
+    <div class="cover-copy">
+      <span class="cover-kicker"><i></i> KARACHI PROPERTY PRICE INTELLIGENCE</span>
+      <h1>Find your<br><span>Dream Home</span></h1>
+      <p>Make a confident move with a clear estimate, useful area insights and a better view of your options.</p>
+      <div class="cover-actions"><a class="btn btn-dark rounded-pill px-4 py-3" href="{{ url_for('register') }}">Get a price estimate <span aria-hidden="true">↗</span></a><a class="cover-secondary" href="#how-it-works">How it works <span aria-hidden="true">↓</span></a></div>
+      <div class="cover-proof"><span aria-hidden="true">✦</span> Made for Karachi buyers and sellers</div>
     </div>
-
-    <div class="landing-visual">
-      <img class="landing-hero-image" src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1800&q=88" alt="Contemporary home with a warm, light-filled interior">
-      <div class="hero-image-shade"></div>
-      <div class="hero-image-caption"><span>YOUR NEXT CHAPTER</span><strong>Starts with a little more clarity.</strong></div>
-      <div class="hero-floating-card">
-        <span class="floating-icon" aria-hidden="true">⌂</span>
-        <span><small>PROPERTY INSIGHTS</small><b>Value, area and context</b></span>
-        <span class="floating-arrow" aria-hidden="true">↗</span>
-      </div>
-      <div class="hero-image-index"><span>01</span><i></i><span>04</span></div>
-    </div>
-
-    <div class="landing-search-card">
-      <div class="landing-search-intro"><span class="search-icon" aria-hidden="true">⌕</span><span><small>START EXPLORING</small><strong>What would you like to do?</strong></span></div>
-      <a href="{{ url_for('register') }}"><span class="quick-link-icon" aria-hidden="true">⌂</span><span><small>PRICE ESTIMATE</small><b>Estimate a home</b></span><span class="quick-link-arrow">↗</span></a>
-      <a href="#areas"><span class="quick-link-icon" aria-hidden="true">⌖</span><span><small>LOCALITY GUIDE</small><b>Explore Karachi</b></span><span class="quick-link-arrow">↗</span></a>
-      <a href="{{ url_for('register') }}"><span class="quick-link-icon" aria-hidden="true">⇄</span><span><small>SIDE BY SIDE</small><b>Compare homes</b></span><span class="quick-link-arrow">↗</span></a>
+    <div class="cover-caption"><span>EVERLIGHT HOMES</span><strong>A little more clarity<br>for your next move.</strong></div>
+    <div class="cover-search-panel">
+      <div class="cover-panel-heading"><span class="cover-search-icon" aria-hidden="true">⌕</span><span><small>START YOUR SEARCH</small><strong>Explore your next move</strong></span></div>
+      <a class="cover-search-item" href="#areas"><span class="cover-item-icon" aria-hidden="true">⌖</span><span><small>LOCATION</small><b>Karachi, Pakistan</b></span><span class="cover-chevron" aria-hidden="true">⌄</span></a>
+      <a class="cover-search-item" href="#how-it-works"><span class="cover-item-icon" aria-hidden="true">⌂</span><span><small>PROPERTY TYPE</small><b>{{ property_type_count }} home types</b></span><span class="cover-chevron" aria-hidden="true">⌄</span></a>
+      <a class="cover-search-submit" href="{{ url_for('register') }}">Start estimate <span aria-hidden="true">↗</span></a>
     </div>
   </div>
 </section>
