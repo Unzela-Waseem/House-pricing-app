@@ -6,7 +6,7 @@ A responsive Flask app that estimates Karachi home prices with the supplied, alr
 
 - Register and sign in with hashed passwords, CSRF protection and login rate limiting.
 - Estimate a home's price using the model's exact features: `location`, `property_type`, `bedrooms`, `baths`, `area_sqft`.
-- Convert Sq. Ft, Sq. Yard, Marla and Kanal to square feet before prediction. The model output is converted back with `numpy.expm1`.
+- Convert Sq. Ft, Sq. Yard, Marla and Kanal to square feet before prediction. The model's log price output is converted back with `numpy.exp` and the crore PKR scale.
 - Optional asking-price verdicts: Overpriced (>15%), Good Deal (<-15%), or Fair Price (within ±15%).
 - Personal prediction history with search, filters, sort, pagination, deletion and CSV export.
 - Personal dashboard, side-by-side property comparison, Karachi locality map, account profile and admin user management.
@@ -23,7 +23,7 @@ A responsive Flask app that estimates Karachi home prices with the supplied, alr
 
 ## Model files and compatibility
 
-Keep `house_price_model.pkl` and `model_meta.json` in the project root. The model is loaded once when the app starts and is not retrained or altered. The pickle records scikit-learn 1.6.1; `requirements.txt` pins that version and the CPU-only XGBoost 2.1.4 package. The supplied model's output and saved locality price-per-square-foot figures indicate its log target is measured in crore PKR units, so inference restores PKR with `expm1(prediction) * 10_000_000`. The original training script was not supplied; verify this scale against that script if it becomes available. If the model loader reports an XGBoost incompatibility, use the exact XGBoost version from the original training environment and update the pin accordingly.
+Keep `house_price_model.pkl` and `model_meta.json` in the project root. The model is loaded once when the app starts and is not retrained or altered. The pickle records scikit-learn 1.6.1; `requirements.txt` pins that version and the CPU-only XGBoost 2.1.4 package. Comparing model outputs with the supplied `Property.csv` listings indicates the target is `log(price / 10_000_000)`, so inference restores PKR with `exp(prediction) * 10_000_000`. Using `expm1` instead materially understated prices. The original training script was not supplied, so confirm this transformation against it if available. If the model loader reports an XGBoost incompatibility, use the exact XGBoost version from the original training environment and update the pin accordingly.
 
 ## First admin account
 

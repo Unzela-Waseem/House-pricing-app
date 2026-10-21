@@ -47,8 +47,8 @@ meta = json.loads((ROOT / "model_meta.json").read_text(encoding="utf-8"))
 LOCATIONS = meta["locations"]
 TYPES = meta["property_types"]
 LOC_STATS = meta["location_stats"]
-# The supplied model output indicates a crore-scale log target. Restore PKR
-# after expm1; cross-checked against the saved locality price-per-square-foot data.
+# The supplied model output is on a log(price / 1 crore PKR) scale. Restore PKR
+# with exp; validating against Property.csv showed expm1 understated prices.
 PRICE_SCALE_PKR = 10_000_000
 db = users = predictions = None
 client = None
@@ -182,7 +182,7 @@ def parse_property(form):
     log_prediction = float(model.predict(row)[0])
     if not math.isfinite(log_prediction):
         raise ValueError("Model se valid estimate nahi nikla. Baad mein dobara try karein.")
-    estimated = float(np.expm1(log_prediction) * PRICE_SCALE_PKR)
+    estimated = float(np.exp(log_prediction) * PRICE_SCALE_PKR)
     if not math.isfinite(estimated) or estimated <= 0:
         raise ValueError("Is property ke liye model valid positive estimate nahi de saka. Details check karke dobara try karein.")
     verdict = None
