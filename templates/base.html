@@ -16,12 +16,20 @@
     {% if session.get('user_id') %}
     <a class="nav-link" href="{{ url_for('predict') }}">Predict</a><a class="nav-link" href="{{ url_for('history') }}">History</a><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a><a class="nav-link" href="{{ url_for('compare') }}">Compare</a><a class="nav-link" href="{{ url_for('map_explorer') }}">Explore map</a><a class="nav-link" href="{{ url_for('profile') }}">Profile</a>
     {% if session.get('role') == 'admin' %}<a class="nav-link" href="{{ url_for('admin') }}">Admin</a>{% endif %}<a class="btn btn-dark btn-sm rounded-pill px-3" href="{{ url_for('logout') }}">Log out</a>
+    {% elif request.endpoint == 'index' %}<a class="nav-link" href="#how-it-works">How it works</a><a class="nav-link" href="#areas">Explore areas</a><a class="nav-link" href="#tools">Features</a><a class="nav-link" href="{{ url_for('login') }}">Log in</a><a class="btn btn-dark btn-sm rounded-pill px-3" href="{{ url_for('register') }}">Get started</a>
     {% else %}<a class="nav-link" href="{{ url_for('index') }}">Home</a><a class="nav-link" href="{{ url_for('login') }}">Log in</a><a class="btn btn-dark btn-sm rounded-pill px-3" href="{{ url_for('register') }}">Get started</a>{% endif %}
   </div></div>
 </div></nav>
 <main class="site-main">
 <div class="container flash-wrap">{% with messages = get_flashed_messages(with_categories=true) %}{% for category, message in messages %}<div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>{% endfor %}{% endwith %}</div>
 {% block content %}{% endblock %}</main>
+{% if request.endpoint == 'index' and not session.get('user_id') %}
+<footer class="site-footer site-footer-landing">
+  <div class="container footer-main"><div class="footer-brand"><a class="navbar-brand" href="{{ url_for('index') }}"><span class="brand-mark">E</span><span>Everlight <small>HOMES</small></span></a><p>Thoughtful property research for Karachi. Explore areas, estimate a value and compare your options.</p></div><div class="footer-links"><strong>Explore</strong><a href="#areas">Karachi areas</a><a href="#how-it-works">How it works</a><a href="#tools">Features</a></div><div class="footer-links"><strong>Your account</strong><a href="{{ url_for('login') }}">Log in</a><a href="{{ url_for('register') }}">Create account</a><a href="{{ url_for('register') }}">Start an estimate</a></div><div class="footer-note"><span class="eyebrow">A NOTE ON ESTIMATES</span><p>Predictions are for guidance only and are not official valuations. Confirm prices with current listings and local professionals.</p></div></div>
+  <div class="container footer-bottom"><span>© {{ year }} Everlight Homes · Karachi House Price Predictor</span><span>Built for clearer property decisions</span></div>
+</footer>
+{% else %}
 <footer class="site-footer"><div class="container d-flex flex-column flex-md-row justify-content-between gap-2"><span>© {{ year }} Everlight Homes · Karachi House Price Predictor</span><span>Estimates for guidance only · Model trained on 2018 listings</span></div></footer>
+{% endif %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>{% block scripts %}{% endblock %}
 </body></html>

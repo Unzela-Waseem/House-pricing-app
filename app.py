@@ -200,7 +200,19 @@ def parse_property(form):
 def index():
     if session.get("user_id"):
         return redirect(url_for("predict"))
-    return render_template("landing.html", stats=meta.get("metrics", {}))
+    featured_names = ["DHA Defence", "Clifton", "Gulistan-e-Jauhar", "Gulshan-e-Iqbal Town", "Bahria Town Karachi", "New Karachi"]
+    featured_areas = [
+        {"name": name, **LOC_STATS[name]}
+        for name in featured_names
+        if name in LOC_STATS
+    ]
+    return render_template(
+        "landing.html",
+        stats=meta.get("metrics", {}),
+        featured_areas=featured_areas,
+        locality_count=len(LOCATIONS),
+        property_type_count=len(TYPES),
+    )
 
 
 @app.route("/register", methods=["GET", "POST"])

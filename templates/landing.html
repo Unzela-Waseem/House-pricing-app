@@ -1,7 +1,97 @@
-{% extends 'base.html' %}{% block title %}Find your Karachi home{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Find your Karachi home{% endblock %}
+
 {% block content %}
-<section class="hero"><div class="container hero-inner"><div class="hero-copy"><span class="eyebrow">KARACHI PROPERTY PRICE INTELLIGENCE</span><h1>Find your<br><em>dream home.</em></h1><p>Make your next property decision with a data-backed estimate, area insights and a little more confidence.</p><div class="d-flex gap-3 flex-wrap"><a class="btn btn-dark rounded-pill px-4 py-3" href="{{ url_for('register') }}">Get a price estimate <span aria-hidden="true">↗</span></a><a class="btn btn-outline-dark rounded-pill px-4 py-3" href="{{ url_for('login') }}">Sign in</a></div><div class="hero-proof"><span>✦</span> Built for Karachi buyers and sellers</div></div><div class="hero-photo"><div class="hero-photo-caption"><span>THE RIGHT HOME</span><b>Starts with knowing its value.</b></div></div><div class="hero-search"><div><small>Estimate</small><strong>Property value</strong></div><div><small>Coverage</small><strong>Karachi, Pakistan</strong></div><div><small>Data behind it</small><strong>80 localities · 5 types</strong></div><a class="btn btn-dark rounded-pill px-4" href="{{ url_for('register') }}">Start now</a></div></div></section>
-<section class="container trust-row"><div><b>01</b><strong>Local area insights</strong><span>Explore price-per-square-foot patterns across Karachi.</span></div><div><b>02</b><strong>Clear estimates</strong><span>Understand an estimated range and listing verdict.</span></div><div><b>03</b><strong>Your own history</strong><span>Save and revisit your property comparisons.</span></div><div><b>04</b><strong>Thoughtful decisions</strong><span>Bring more context to your next property conversation.</span></div></section>
-<section class="section container"><div class="section-heading"><div><span class="eyebrow">A CLOSER LOOK</span><h2>Handpicked insights for you</h2></div><a href="{{ url_for('register') }}">Explore the predictor ↗</a></div><div class="insight-grid"><a href="{{ url_for('register') }}" class="insight-card card-coast"><span class="pill">MARKET GUIDE</span><h3>Know the value<br>behind the listing.</h3><span class="circle-arrow">↗</span></a><a href="{{ url_for('register') }}" class="insight-card card-city"><span class="pill">COMPARE</span><h3>Find your<br>better fit.</h3><span class="circle-arrow">↗</span></a><a href="{{ url_for('register') }}" class="insight-card card-home"><span class="pill">AREA EXPLORER</span><h3>See Karachi<br>by locality.</h3><span class="circle-arrow">↗</span></a></div></section>
-<section class="cta-band"><div class="container"><div><span class="eyebrow">LET'S MAKE IT HAPPEN</span><h2>Your next move starts<br>with a clear estimate.</h2></div><a href="{{ url_for('register') }}" class="btn btn-light rounded-pill px-4 py-3">Create your free account ↗</a></div></section>
+<section class="landing-hero" id="home">
+  <div class="container landing-hero-grid">
+    <div class="landing-copy">
+      <span class="eyebrow">KARACHI HOMES · CLEARER DECISIONS</span>
+      <h1>Find a home<br>that feels like <em>yours.</em></h1>
+      <p>Explore Karachi neighbourhoods, estimate a property's value and compare your options—all in one place.</p>
+      <div class="landing-actions">
+        <a class="btn btn-dark rounded-pill px-4 py-3" href="{{ url_for('register') }}">Estimate a property <span aria-hidden="true">↗</span></a>
+        <a class="btn btn-outline-dark rounded-pill px-4 py-3" href="#how-it-works">See how it works</a>
+      </div>
+      <div class="landing-proof"><span aria-hidden="true">✦</span> Made for Karachi buyers, sellers and curious explorers</div>
+    </div>
+
+    <div class="landing-visual">
+      <img class="landing-hero-image" src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1800&q=88" alt="Contemporary home with a warm, light-filled interior">
+      <div class="hero-image-shade"></div>
+      <div class="hero-image-caption"><span>YOUR NEXT CHAPTER</span><strong>Starts with a little more clarity.</strong></div>
+      <div class="hero-floating-card">
+        <span class="floating-icon" aria-hidden="true">⌂</span>
+        <span><small>PROPERTY INSIGHTS</small><b>Value, area and context</b></span>
+        <span class="floating-arrow" aria-hidden="true">↗</span>
+      </div>
+      <div class="hero-image-index"><span>01</span><i></i><span>04</span></div>
+    </div>
+
+    <div class="landing-search-card">
+      <div class="landing-search-intro"><span class="search-icon" aria-hidden="true">⌕</span><span><small>START EXPLORING</small><strong>What would you like to do?</strong></span></div>
+      <a href="{{ url_for('register') }}"><span class="quick-link-icon" aria-hidden="true">⌂</span><span><small>PRICE ESTIMATE</small><b>Estimate a home</b></span><span class="quick-link-arrow">↗</span></a>
+      <a href="#areas"><span class="quick-link-icon" aria-hidden="true">⌖</span><span><small>LOCALITY GUIDE</small><b>Explore Karachi</b></span><span class="quick-link-arrow">↗</span></a>
+      <a href="{{ url_for('register') }}"><span class="quick-link-icon" aria-hidden="true">⇄</span><span><small>SIDE BY SIDE</small><b>Compare homes</b></span><span class="quick-link-arrow">↗</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="landing-facts" aria-label="About the predictor">
+  <div class="container landing-facts-grid">
+    <div><strong>{{ locality_count }}</strong><span>Karachi localities</span></div>
+    <div><strong>{{ property_type_count }}</strong><span>Property types</span></div>
+    <div><strong>One place</strong><span>Estimate, compare and explore</span></div>
+    <p>Estimates are for guidance. Check current listings before making a property decision.</p>
+  </div>
+</section>
+
+<section class="landing-section container" id="areas">
+  <div class="landing-section-head">
+    <div><span class="eyebrow">GET TO KNOW THE CITY</span><h2>Explore Karachi,<br><em>one area at a time.</em></h2></div>
+    <p>Browse saved locality price-per-square-foot figures from the supplied dataset. They are historical context, not live market quotes.</p>
+  </div>
+  <div class="locality-grid">
+    {% for area in featured_areas %}
+    <a class="locality-card locality-card-{{ loop.index }}" href="{{ url_for('register') }}" aria-label="Explore {{ area.name }} estimates">
+      <img src="{% if loop.index == 1 %}https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=82{% elif loop.index == 2 %}https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=82{% elif loop.index == 3 %}https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=900&q=82{% elif loop.index == 4 %}https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=82{% elif loop.index == 5 %}https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=900&q=82{% else %}https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=82{% endif %}" alt="Illustrative home image for {{ area.name }}" loading="lazy">
+      <span class="locality-shade"></span>
+      <span class="locality-label"><small>AREA SNAPSHOT</small><strong>{{ area.name }}</strong><span>₨ {{ "{:,.0f}".format(area.avg_ppsf) }} <small>/ sq. ft.</small></span></span>
+      <span class="locality-arrow" aria-hidden="true">↗</span>
+    </a>
+    {% endfor %}
+  </div>
+  <p class="landing-data-note">Area figures come from the model's supplied historical data and may differ from today's asking prices.</p>
+</section>
+
+<section class="how-section" id="how-it-works">
+  <div class="container">
+    <div class="landing-section-head how-heading">
+      <div><span class="eyebrow">A SIMPLE PLACE TO START</span><h2>From first look<br>to <em>clearer choice.</em></h2></div>
+      <a class="text-link" href="{{ url_for('register') }}">Try the predictor <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="how-grid">
+      <article class="how-card"><span class="how-number">01</span><span class="how-icon" aria-hidden="true">⌂</span><h3>Add the details</h3><p>Choose a Karachi area, property type, rooms and size. Add the seller's asking price if you have it.</p><span class="how-rule"></span><small>LOCATION · TYPE · SIZE</small></article>
+      <article class="how-card how-card-featured"><span class="how-number">02</span><span class="how-icon" aria-hidden="true">⌁</span><h3>See an estimate</h3><p>The supplied machine-learning model estimates a price and shows an approximate range for context.</p><span class="how-rule"></span><small>MODEL-BASED ESTIMATE</small></article>
+      <article class="how-card"><span class="how-number">03</span><span class="how-icon" aria-hidden="true">⇄</span><h3>Compare your options</h3><p>Review asking prices, save estimates to your history and compare two properties side by side.</p><span class="how-rule"></span><small>COMPARE · SAVE · EXPLORE</small></article>
+    </div>
+  </div>
+</section>
+
+<section class="feature-section container" id="tools">
+  <div class="feature-image-wrap">
+    <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=86" alt="Sunlit living room in a modern home" loading="lazy">
+    <div class="feature-image-note"><span>EVERLIGHT HOMES</span><strong>Good decisions<br>start with good context.</strong></div>
+  </div>
+  <div class="feature-copy">
+    <span class="eyebrow">MORE THAN ONE NUMBER</span>
+    <h2>See the details<br>that help you <em>decide.</em></h2>
+    <p>Keep your estimates together, look at area insights and compare properties with the same details.</p>
+    <div class="feature-list"><div><span>01</span><p><b>Saved history</b><small>Revisit and export your estimates.</small></p><span class="feature-check">✓</span></div><div><span>02</span><p><b>Property comparison</b><small>See estimated value and price per sq. ft.</small></p><span class="feature-check">✓</span></div><div><span>03</span><p><b>Area explorer</b><small>Browse Karachi locations on a map.</small></p><span class="feature-check">✓</span></div></div>
+    <a class="text-link" href="{{ url_for('register') }}">Create your free account <span aria-hidden="true">↗</span></a>
+  </div>
+</section>
+
+<section class="landing-cta">
+  <div class="container landing-cta-inner"><div><span class="eyebrow">READY WHEN YOU ARE</span><h2>Your next move starts<br>with a clearer picture.</h2><p>Make an estimate, compare properties and keep your research in one place.</p></div><a class="btn btn-light rounded-pill px-4 py-3" href="{{ url_for('register') }}">Get started <span aria-hidden="true">↗</span></a></div>
+</section>
 {% endblock %}
