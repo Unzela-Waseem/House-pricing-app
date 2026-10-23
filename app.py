@@ -71,7 +71,7 @@ def now_utc():
 
 def database_ready():
     if users is None or predictions is None:
-        flash("Database connect nahi ho saka. MONGODB_URI check karein.", "danger")
+        flash("Could not connect to the database. Check your MONGODB_URI setting.", "danger")
         return False
     return True
 
@@ -80,7 +80,7 @@ def login_required(view):
     @wraps(view)
     def wrapped(*args, **kwargs):
         if not session.get("user_id"):
-            flash("Pehle login karo.", "warning")
+            flash("Please log in to continue.", "warning")
             return redirect(url_for("login"))
         return view(*args, **kwargs)
     return wrapped
@@ -109,7 +109,7 @@ def maintain_session():
             try:
                 if (now_utc() - datetime.fromtimestamp(float(last), timezone.utc)) > timedelta(minutes=30):
                     session.clear()
-                    flash("Session expire ho gaya. Dobara login karein.", "info")
+                    flash("Your session has expired. Please log in again.", "info")
                     return redirect(url_for("login"))
             except (ValueError, TypeError):
                 session.clear()
@@ -152,26 +152,26 @@ def parse_property(form):
     prop_type = form.get("property_type", "").strip()
     unit = form.get("unit", "Sq. Ft")
     if location not in LOCATIONS or prop_type not in TYPES:
-        raise ValueError("Location ya property type select karein.")
+        raise ValueError("Select a valid location and property type.")
     if unit not in {"Sq. Ft", "Sq. Yard", "Marla", "Kanal"}:
-        raise ValueError("Area unit durust select karein.")
+        raise ValueError("Select a valid area unit.")
     try:
         beds, baths, area = int(form.get("bedrooms", "")), int(form.get("baths", "")), float(form.get("area", ""))
         listed_raw = form.get("listed_price", "").replace(",", "").strip()
         listed = float(listed_raw) if listed_raw else None
     except (TypeError, ValueError):
-        raise ValueError("Bedrooms, bathrooms, area aur listed price mein valid numbers dein.")
+        raise ValueError("Enter valid numbers for bedrooms, bathrooms, area, and asking price.")
     if not 0 <= beds <= 10 or not 0 <= baths <= 10:
-        raise ValueError("Bedrooms aur bathrooms 0 se 10 ke darmiyan hone chahiye.")
+        raise ValueError("Bedrooms and bathrooms must be between 0 and 10.")
     if not math.isfinite(area) or area <= 0:
-        raise ValueError("Area zero se zyada hona chahiye.")
+        raise ValueError("Area must be greater than zero.")
     factors = {"Sq. Ft": 1, "Sq. Yard": 9, "Marla": 272.25, "Kanal": 5445}
     area_sqft = area * factors[unit]
     area_min, area_max = float(meta["area_min"]), float(meta["area_max"])
     if area_sqft < area_min or area_sqft > area_max:
-        raise ValueError(f"Converted area model ke training range ({area_min:,.0f}–{area_max:,.0f} sq ft) ke andar dein.")
+        raise ValueError(f"The converted area must be within the model's training range ({area_min:,.0f}–{area_max:,.0f} sq ft).")
     if listed is not None and (not math.isfinite(listed) or listed <= 0):
-        raise ValueError("Listed price zero se zyada hona chahiye.")
+        raise ValueError("The asking price must be greater than zero.")
     row = pd.DataFrame([{
         "location": location,
         "property_type": prop_type,
@@ -181,10 +181,10 @@ def parse_property(form):
     }], columns=["location", "property_type", "bedrooms", "baths", "area_sqft"])
     log_prediction = float(model.predict(row)[0])
     if not math.isfinite(log_prediction):
-        raise ValueError("Model se valid estimate nahi nikla. Baad mein dobara try karein.")
+        raise ValueError("The model could not produce a valid estimate. Please try again later.")
     estimated = float(np.exp(log_prediction) * PRICE_SCALE_PKR)
     if not math.isfinite(estimated) or estimated <= 0:
-        raise ValueError("Is property ke liye model valid positive estimate nahi de saka. Details check karke dobara try karein.")
+        raise ValueError("The model could not produce a valid estimate for this property. Check the details and try again.")
     verdict = None
     if listed is not None:
         gap = (listed - estimated) / estimated * 100 if estimated else 0
@@ -224,18 +224,18 @@ def register():
             return render_template("register.html")
         name, email, password = request.form.get("name", "").strip(), request.form.get("email", "").strip().lower(), request.form.get("password", "")
         if not name or not email or not password:
-            flash("Tamam fields fill karein.", "danger")
+            flash("Complete all required fields.", "danger")
         elif not re.fullmatch(r"[^\s@]+@[^\s@]+\.[^\s@]+", email):
-            flash("Valid email address dein.", "danger")
+            flash("Enter a valid email address.", "danger")
         elif len(password) < 6:
-            flash("Password kam az kam 6 characters ka hona chahiye.", "danger")
+            flash("Your password must contain at least 6 characters.", "danger")
         else:
             try:
                 users.insert_one({"name": name, "email": email, "password_hash": generate_password_hash(password), "role": "user", "created_at": now_utc()})
-                flash("Account created. Ab login karein.", "success")
+                flash("Your account has been created. Please log in.", "success")
                 return redirect(url_for("login"))
             except PyMongoError as exc:
-                flash("Yeh email pehle se registered hai." if exc.__class__.__name__ == "DuplicateKeyError" else "Account save nahi ho saka.", "danger")
+                flash("This email is already registered." if exc.__class__.__name__ == "DuplicateKeyError" else "We could not save your account. Please try again.", "danger")
     return render_template("register.html")
 
 
@@ -253,9 +253,9 @@ def login():
             session.clear()
             session.permanent = True
             session.update(user_id=str(user["_id"]), name=user["name"], role=user.get("role", "user"), last_seen=now_utc().timestamp())
-            flash("Khush aamdeed!", "success")
+            flash("Welcome back!", "success")
             return redirect(url_for("predict"))
-        flash("Email ya password ghalat hai.", "danger")
+        flash("The email address or password is incorrect.", "danger")
     return render_template("login.html")
 
 
@@ -278,7 +278,7 @@ def predict():
             result["user_id"] = session["user_id"]
             result["created_at"] = now_utc()
             predictions.insert_one(result.copy())
-            flash("Prediction history mein save ho gayi.", "success")
+            flash("Your estimate has been saved to history.", "success")
         except ValueError as exc:
             flash(str(exc), "danger")
     return render_template("predict.html", locations=LOCATIONS, types=TYPES, result=result)
@@ -312,7 +312,7 @@ def delete_prediction(record_id):
     if not valid_object_id(record_id): abort(404)
     if database_ready():
         result = predictions.delete_one({"_id": ObjectId(record_id), "user_id": session["user_id"]})
-        flash("Prediction delete kar di." if result.deleted_count else "Record nahi mila.", "success" if result.deleted_count else "warning")
+        flash("The estimate has been deleted." if result.deleted_count else "The record could not be found.", "success" if result.deleted_count else "warning")
     return redirect(url_for("history"))
 
 
@@ -388,24 +388,24 @@ def profile():
         if action == "update":
             name, old, new = request.form.get("name", "").strip(), request.form.get("old_password", ""), request.form.get("new_password", "")
             update = {}
-            if not name: flash("Name required hai.", "danger")
+            if not name: flash("Name is required.", "danger")
             elif new and (not check_password_hash(user["password_hash"], old) or len(new) < 6):
-                flash("Password change ke liye old password sahi dein aur naya password 6+ characters ka ho.", "danger")
+                flash("To change your password, enter your current password and a new password with at least 6 characters.", "danger")
             else:
                 update["name"] = name
                 if new: update["password_hash"] = generate_password_hash(new)
                 users.update_one({"_id": user["_id"]}, {"$set": update})
                 session["name"] = name
-                flash("Profile update ho gayi.", "success")
+                flash("Your profile has been updated.", "success")
                 return redirect(url_for("profile"))
         elif action == "delete":
             if check_password_hash(user["password_hash"], request.form.get("confirm_password", "")):
                 predictions.delete_many({"user_id": session["user_id"]})
                 users.delete_one({"_id": user["_id"]})
                 session.clear()
-                flash("Account aur uski predictions delete kar di gayi hain.", "info")
+                flash("Your account and saved estimates have been deleted.", "info")
                 return redirect(url_for("login"))
-            flash("Password ghalat hai; account delete nahi hua.", "danger")
+            flash("The password is incorrect. Your account was not deleted.", "danger")
     count = predictions.count_documents({"user_id": session["user_id"]})
     return render_template("profile.html", user=user, count=count)
 
@@ -433,11 +433,11 @@ def admin():
 def admin_delete(user_id):
     if not valid_object_id(user_id): abort(404)
     if user_id == session["user_id"]:
-        flash("Apna admin account yahan se delete nahi kar sakte.", "warning")
+        flash("You cannot delete your own administrator account here.", "warning")
     elif database_ready():
         predictions.delete_many({"user_id": user_id})
         users.delete_one({"_id": ObjectId(user_id)})
-        flash("User aur uski predictions delete kar di.", "success")
+        flash("The user and their saved estimates have been deleted.", "success")
     return redirect(url_for("admin"))
 
 
@@ -451,33 +451,33 @@ def admin_role(user_id):
         users.update_one({"_id": ObjectId(user_id)}, {"$set": {"role": role}})
         if user_id == session["user_id"]:
             session["role"] = role
-        flash("User role update kar diya.", "success")
+        flash("The user's role has been updated.", "success")
     return redirect(url_for("admin"))
 
 
 @app.errorhandler(403)
 def forbidden(_):
-    return render_template("error.html", code=403, title="Access denied", message="Is page ke liye admin access zaroori hai."), 403
+    return render_template("error.html", code=403, title="Access denied", message="Administrator access is required to view this page."), 403
 
 
 @app.errorhandler(400)
 def bad_request(_):
-    return render_template("error.html", code=400, title="Request could not be processed", message="Form expire ho gaya ya request invalid thi. Page refresh karke dobara try karein."), 400
+    return render_template("error.html", code=400, title="Request could not be processed", message="The form expired or the request was invalid. Refresh the page and try again."), 400
 
 
 @app.errorhandler(404)
 def not_found(_):
-    return render_template("error.html", code=404, title="Page not found", message="Yeh page available nahi hai."), 404
+    return render_template("error.html", code=404, title="Page not found", message="This page is not available."), 404
 
 
 @app.errorhandler(500)
 def server_error(_):
-    return render_template("error.html", code=500, title="Something went wrong", message="Thori dair baad dobara koshish karein."), 500
+    return render_template("error.html", code=500, title="Something went wrong", message="Please try again in a few minutes."), 500
 
 
 @app.errorhandler(429)
 def too_many(_):
-    return render_template("error.html", code=429, title="Please slow down", message="Login attempts ki limit exceed ho gayi. Ek minute baad dobara koshish karein."), 429
+    return render_template("error.html", code=429, title="Please slow down", message="Too many login attempts. Please wait a minute before trying again."), 429
 
 
 if __name__ == "__main__":
